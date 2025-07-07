@@ -1,8 +1,28 @@
-import pandas as pd
-import plotly.graph_objects as go
-import numpy as np
+import pandas as pd # type: ignore
+import plotly.graph_objects as go # type: ignore
+import numpy as np # type: ignore
+import os
 
-def plot_documents_interactif(pub_year, app_year, fam_year, return_fig=False):
+# Chargement des données
+df_pub = pd.read_csv(os.path.join("data", "df_pub.csv"))
+df_app = pd.read_csv(os.path.join("data", "df_app.csv"))
+df_Fam = pd.read_csv(os.path.join("data", "df_Fam.csv"))
+
+df_pub_kind = pd.read_csv(os.path.join("data", "df_pub_kind.csv"))
+df_app_kind = pd.read_csv(os.path.join("data", "df_app_kind.csv"))
+df_Fam_kind = pd.read_csv(os.path.join("data", "df_Fam_kind.csv"))
+
+df_pub_ctry = pd.read_csv(os.path.join("data", "df_pub_ctry.csv"))
+df_app_ctry = pd.read_csv(os.path.join("data", "df_app_ctry.csv"))
+df_Fam_ctry = pd.read_csv(os.path.join("data", "df_Fam_ctry.csv"))
+
+pub_year = pd.read_csv(os.path.join('data/pub_year.csv'))
+app_year = pd.read_csv(os.path.join('data/app_year.csv'))
+fam_year = pd.read_csv(os.path.join('data/fam_year.csv'))
+
+
+def plot_documents_interactif():
+    global pub_year, app_year, fam_year
     # Création d’un dictionnaire pour stocker les traces par autorité
     authorities = ['EP', 'US', 'WO']
     all_traces = []
@@ -66,12 +86,11 @@ def plot_documents_interactif(pub_year, app_year, fam_year, return_fig=False):
         yaxis_title='Nombre de documents',
         title="Nombre de documents par an pour l'autorité : EP"
     )
-    if return_fig:
-        return fig
-    else:
-        fig.show()
+    fig.show()
 
-def plot_horizontal_stacked_bar(df_pub_kind, df_app_kind, df_Fam_kind, return_fig=False):
+def plot_horizontal_stacked_bar():
+    global df_pub_kind, df_app_kind, df_Fam_kind
+
     # Fonction de préparation des données pour chaque type
     def prepare_data(df, kind_col='Kind'):
         df_grouped = df.groupby(['Auth', kind_col])['Count'].sum().reset_index()
@@ -158,12 +177,12 @@ def plot_horizontal_stacked_bar(df_pub_kind, df_app_kind, df_Fam_kind, return_fi
         legend=dict(title='Type de déposant', orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1)
     )
 
-    if return_fig:
-        return fig
-    else:
-        fig.show()
+    fig.show()
 
-def plot_by_country_with_labels(df_pub_ctry, df_app_ctry, df_Fam_ctry, top_n=10, return_fig=False):
+def plot_by_country_with_labels():
+    global df_pub_ctry, df_app_ctry, df_Fam_ctry
+    top_n=10
+
     data_dict = {
         'Publication': df_pub_ctry,
         'Application': df_app_ctry,
@@ -245,13 +264,13 @@ def plot_by_country_with_labels(df_pub_ctry, df_app_ctry, df_Fam_ctry, top_n=10,
         )
     )
 
-    if return_fig:
-        return fig
-    else:
-        fig.show()
+    fig.show()
 
 
-def plot_top_applicants_colored(df_pub, df_app, df_Fam, top_n=20, return_fig=False):
+def plot_top_applicants_colored():
+    global df_pub, df_app, df_Fam
+    top_n=20
+
     data_dict = {
         'Publication': df_pub,
         'Application': df_app,
@@ -373,7 +392,4 @@ def plot_top_applicants_colored(df_pub, df_app, df_Fam, top_n=20, return_fig=Fal
         height=600  # plus lisible
     )
 
-    if return_fig:
-        return fig
-    else:
-        fig.show()
+    fig.show()

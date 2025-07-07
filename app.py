@@ -1,7 +1,6 @@
-from dash import Dash, dcc, html
-import pandas as pd
-import plotly.graph_objects as go
-import numpy as np
+from dash import Dash, dcc, html # type: ignore
+import pandas as pd # type: ignore
+import plotly.graph_objects as go # type: ignore
 
 # Charger les données
 pub_year = pd.read_csv('data/pub_year.csv')
@@ -19,7 +18,6 @@ df_Fam_ctry = pd.read_csv('data/df_Fam_ctry.csv')
 df_pub = pd.read_csv('data/df_pub.csv')
 df_app = pd.read_csv('data/df_app.csv')
 df_Fam = pd.read_csv('data/df_Fam.csv')
-# ... charger toutes les autres nécessaires
 
 # Créer l'app Dash
 app = Dash(__name__)
@@ -28,10 +26,10 @@ app.title = "Dashboard Brevets"
 # Construire les figures avec tes fonctions déjà créées
 from functions import plot_documents_interactif, plot_horizontal_stacked_bar, plot_by_country_with_labels, plot_top_applicants_colored
 
-fig1 = plot_documents_interactif(pub_year, app_year, fam_year)   # passe les bons DataFrames
-fig2 = plot_horizontal_stacked_bar(df_pub_kind, df_app_kind, df_Fam_kind)
-fig3 = plot_by_country_with_labels(df_pub_ctry, df_app_ctry, df_Fam_ctry, top_n=10)
-fig4 = plot_top_applicants_colored(df_pub, df_app, df_Fam)
+fig1 = plot_documents_interactif()   # passe les bons DataFrames
+fig2 = plot_horizontal_stacked_bar()
+fig3 = plot_by_country_with_labels()
+fig4 = plot_top_applicants_colored()
 
 # Définir l'agencement de l'app
 app.layout = html.Div([
