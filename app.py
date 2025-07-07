@@ -25,7 +25,7 @@ app = Dash(__name__)
 app.title = "Dashboard Brevets"
 
 # Construire les figures avec tes fonctions déjà créées
-from plots import plot_documents_interactif, plot_horizontal_stacked_bar, plot_by_country_with_labels, plot_top_applicants_colored
+from functions import plot_documents_interactif, plot_horizontal_stacked_bar, plot_by_country_with_labels, plot_top_applicants_colored
 
 fig1 = plot_documents_interactif(pub_year, app_year, fam_year)   # passe les bons DataFrames
 fig2 = plot_horizontal_stacked_bar(df_pub_kind, df_app_kind, df_Fam_kind)
