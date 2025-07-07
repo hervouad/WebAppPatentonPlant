@@ -19,6 +19,22 @@ df_pub = pd.read_csv('data/df_pub.csv')
 df_app = pd.read_csv('data/df_app.csv')
 df_Fam = pd.read_csv('data/df_Fam.csv')
 
+print("pub_year:", pub_year.shape)
+print("app_year:", app_year.shape)
+print("fam_year:", fam_year.shape)
+
+print("df_pub_kind:", df_pub_kind.shape)
+print("df_app_kind:", df_app_kind.shape)
+print("df_Fam_kind:", df_Fam_kind.shape)
+
+print("df_pub_ctry:", df_pub_ctry.shape)
+print("df_app_ctry:", df_app_ctry.shape)
+print("df_Fam_ctry:", df_Fam_ctry.shape)
+
+print("df_pub:", df_pub.shape)
+print("df_app:", df_app.shape)
+print("df_Fam:", df_Fam.shape)
+
 # Créer l'app Dash
 app = Dash(__name__)
 app.title = "Dashboard Brevets"
