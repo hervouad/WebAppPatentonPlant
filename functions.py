@@ -23,6 +23,7 @@ fam_year = pd.read_csv(os.path.join('data/fam_year.csv'))
 
 def plot_documents_interactif():
     global pub_year, app_year, fam_year
+    print("Dans plot_documents_interactif - pub_year shape:", pub_year.shape)
     # Création d’un dictionnaire pour stocker les traces par autorité
     authorities = ['EP', 'US', 'WO']
     all_traces = []
