@@ -1,6 +1,7 @@
 from dash import Dash, dcc, html
 import pandas as pd
 import plotly.graph_objects as go
+import numpy as np
 
 # Charger les données
 pub_year = pd.read_csv('data/pub_year.csv')

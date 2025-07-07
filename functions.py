@@ -1,3 +1,7 @@
+import pandas as pd
+import plotly.graph_objects as go
+import numpy as np
+
 def plot_documents_interactif(pub_year, app_year, fam_year, return_fig=False):
     # Création d’un dictionnaire pour stocker les traces par autorité
     authorities = ['EP', 'US', 'WO']
