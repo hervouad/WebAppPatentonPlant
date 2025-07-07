@@ -1,0 +1,6 @@
+dash
+gunicorn
+pandas
+plotly
+numpy
+datetime
