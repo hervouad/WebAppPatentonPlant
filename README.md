@@ -17,7 +17,8 @@ The app consists of several tabs:
 - *(Add other tabs if applicable, e.g. "Applicants", "Technologies", etc.)*
 
 ## 📁 Folder Structure
-├── app.py # Main Dash app
-├── functions.py # Reusable functions for graph generation
-├── data/ # Pre-processed data used by the app and the sql script
-└── README.md # This file
+- app.py # Main Dash app
+- functions.py # Reusable functions for graph generation
+- functions.py # For generating dynamic graph
+- data/ # Pre-processed data used by the app and the sql script
+- README.md # This file
