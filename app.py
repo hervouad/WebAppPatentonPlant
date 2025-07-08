@@ -51,10 +51,25 @@ app.layout = html.Div([
         children=[
         html.Div(
             [
-                html.P([
-                        "This Dash web application provides interactive visualizations of patent data related to the use of CRISPR technologies in agricultural plants.",
+                 html.Div([
+                        html.P([
+                            "This Dash web application provides interactive visualizations of patent data related to the use of CRISPR technologies in agricultural plants. ",
+                            "The aim is to offer insights into application trends and distributions of CRISPR-related patents in plant biotechnology."
                         ],
-                        style={'fontSize': '20px', 'marginBottom': '30px'}),
+                        style={'fontSize': '20px', 'margin': '0'})
+                    ],
+                    style={
+                        'border': '2px solid #ccc',
+                        'borderRadius': '12px',
+                        'backgroundColor': '#f9f9f9',
+                        'padding': '20px',
+                        'marginBottom': '30px',
+                        'boxShadow': '2px 2px 8px rgba(0, 0, 0, 0.1)',
+                        'width': '80%',
+                        'marginLeft': 'auto',
+                        'marginRight': 'auto'
+                    }),
+                    
                 html.Div([
                     html.H2("Data source & availability", style={'marginBottom': '20px'}),
 

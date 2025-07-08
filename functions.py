@@ -267,8 +267,8 @@ def plot_by_country(kind='Publication'):
         legend=dict(
             title='Applicants nationality',
             orientation='h',
-            yanchor='bottom',
-            y=1.02,
+            yanchor='top',
+            y=-0.2,
             xanchor='center',
             x=0.5,
             font=dict(size=14)
