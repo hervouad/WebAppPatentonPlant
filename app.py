@@ -65,6 +65,13 @@ app.layout = html.Div([
                         style={'fontSize': '20px', 'marginBottom': '30px'})
                 ]),
                 html.Div([
+                    html.A("🔗 View the GitHub repository",
+                    href="https://github.com/hervouad/WebAppPatentonPlant",
+                    target="_blank",
+                    style={'fontSize': '18px', 'float': 'right', 'margin': '10px 30px'})
+                ]),
+
+                html.Div([
                     html.H2("Codes IPC / CPC", style={'marginBottom': '10px'}),
                     html.H4("A01H — New Plants (in agriculture)"),
                     html.Ul([
