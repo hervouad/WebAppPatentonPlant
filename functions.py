@@ -74,7 +74,7 @@ def plot_documents_interactif(authority='EP'):
             showgrid=False,
             linecolor='black',
             mirror=True,
-            font=dict(size=18),
+            title_font=dict(size=18),
             tickfont=dict(size=14)
         ),
         yaxis=dict(
@@ -84,7 +84,7 @@ def plot_documents_interactif(authority='EP'):
             gridcolor='lightgrey',
             linecolor='black',
             mirror=True,
-            font=dict(size=18),
+            title_font=dict(size=18),
             tickfont=dict(size=14)
         ),
         legend=dict(
@@ -152,7 +152,7 @@ def plot_horizontal_stacked_bar(kind='Publication'):
             showgrid=False,
             linecolor='black',
             mirror=True,
-            font=dict(size=18),
+            title_font=dict(size=18),
             tickfont=dict(size=14)
         ),
         yaxis=dict(
@@ -162,7 +162,7 @@ def plot_horizontal_stacked_bar(kind='Publication'):
             gridcolor='lightgrey',
             linecolor='black',
             mirror=True,
-            font=dict(size=18),
+            title_font=dict(size=18),
             tickfont=dict(size=14)
         ),
         legend=dict(
