@@ -1,0 +1,104 @@
+SELECT DISTINCT
+    t201.appln_id,
+    t201.appln_filing_date,
+    t201.appln_filing_year,
+    t201.docdb_family_id,
+    t201.inpadoc_family_id,
+    t201.earliest_filing_id,
+    t201.earliest_filing_date,
+    t201.appln_auth,
+    t201.granted,
+    t201.docdb_family_size,
+    t201.nb_citing_docdb_fam,
+    t211.pat_publn_id,
+    t211.publn_date,
+    t211.publn_kind,
+    t211.publn_first_grant,
+    t211.publn_claims,
+    t201.nb_applicants,
+    
+    
+       -- Noms des déposants
+    (SELECT STRING_AGG(p.han_name, '; ')
+     FROM tls207_pers_appln pa
+     JOIN tls206_person p ON pa.person_id = p.person_id
+     WHERE pa.appln_id = t201.appln_id
+       AND pa.applt_seq_nr > 0) AS applicants,
+       
+       -- Pays des déposants
+    (SELECT STRING_AGG(p.person_ctry_code, '; ')
+     FROM tls207_pers_appln pa
+     JOIN tls206_person p ON pa.person_id = p.person_id
+     WHERE pa.appln_id = t201.appln_id
+       AND pa.applt_seq_nr > 0) AS ctry_applicants,
+
+    -- Codes IPC agrégés
+    (SELECT STRING_AGG(ipc.ipc_class_symbol, '; ')
+     FROM tls209_appln_ipc ipc
+     WHERE ipc.appln_id = t201.appln_id) AS ipc_class_symbols,
+
+    -- Codes CPC agrégés
+    (SELECT STRING_AGG(cpc.cpc_class_symbol, '; ')
+     FROM tls224_appln_cpc cpc
+     WHERE cpc.appln_id = t201.appln_id) AS cpc_class_symbols,
+     
+    t202.appln_title,
+    t203.appln_abstract
+
+FROM tls201_appln t201
+
+LEFT JOIN tls202_appln_title t202 
+    ON t201.appln_id =  t202.appln_id
+    
+LEFT JOIN tls203_appln_abstr t203
+    ON t201.appln_id =  t203.appln_id
+    
+LEFT JOIN tls211_pat_publn t211
+    ON t201.appln_id =  t211.appln_id
+    
+WHERE t201.appln_id IN (
+    SELECT DISTINCT t201_inner.appln_id
+    FROM tls201_appln t201_inner
+    JOIN tls209_appln_ipc t209_inner ON t201_inner.appln_id = t209_inner.appln_id
+    JOIN tls224_appln_cpc t224_inner ON t201_inner.appln_id = t224_inner.appln_id
+    WHERE (
+        t209_inner.ipc_class_symbol LIKE 'A01H   1/0%' OR
+        t209_inner.ipc_class_symbol LIKE 'A01H   3/0%' OR
+        t209_inner.ipc_class_symbol LIKE 'A01H   4/0%' OR
+        t209_inner.ipc_class_symbol LIKE 'A01H   5/%' OR
+        t209_inner.ipc_class_symbol LIKE 'A01H   6/%' OR
+        t224_inner.cpc_class_symbol LIKE 'A01H   1/0%' OR
+        t224_inner.cpc_class_symbol LIKE 'A01H   3/0%' OR
+        t224_inner.cpc_class_symbol LIKE 'A01H   4/0%' OR
+        t224_inner.cpc_class_symbol LIKE 'A01H   5/%' OR
+        t224_inner.cpc_class_symbol LIKE 'A01H   6/%'
+    )
+      AND t224_inner.cpc_class_symbol IN ('C12N2310/20', 'C12N9/222', 'C12N9/224', 'C12N9/226')
+      AND t201_inner.appln_auth IN ('EP','US','WO')
+      AND t201_inner.ipr_type = 'PI'
+      AND t201_inner.appln_filing_date <> '9999-12-31'
+      AND t201_inner.appln_filing_year >= 1990
+)
+
+GROUP BY
+    t201.appln_id,
+    t201.appln_filing_date,
+    t201.appln_filing_year,
+    t201.docdb_family_id,
+    t201.inpadoc_family_id,
+	t201.earliest_filing_id,
+    t201.earliest_filing_date,
+    t201.appln_auth,
+    t201.granted,
+    t201.docdb_family_size,
+    t201.nb_citing_docdb_fam,
+    t211.pat_publn_id,
+    t211.publn_date,
+    t211.publn_kind,
+    t211.publn_first_grant,
+    t211.publn_claims,
+    t201.nb_applicants,
+    t202.appln_title,
+    t203.appln_abstract
+    
+ORDER BY t201.docdb_family_id;

@@ -36,30 +36,75 @@ fig4 = plot_top_applicants()
 
 # Définir l'agencement de l'app
 app.layout = html.Div([
-    html.H1("Cripsr patents on agricultural plants"),
-    dcc.Tabs([
+    html.H1("Cripsr patents on agricultural plants",
+        style={
+            'textAlign': 'center',
+            'fontSize': '32px',
+            'marginBottom': '30px'
+            }
+        ),
 
-        dcc.Tab(label='Infos', children=[
-            html.Div([
-                html.H2("Codes IPC/CPC"),
-                html.H4("A01H New Plants"),
-                html.Ul([
-                    html.Li("A01H 1/ — Modifying genotypes"),
-                    html.Li("A01H 3/ — Modifying phenotypes"),
-                    html.Li("A01H 4/ — Reproduction by tissue culture techniques"),
-                    html.Li("A01H 5/ — Angiosperms // plant parts"),
-                    html.Li("A01H 6/ — Angiosperms // botanic taxonomy"),
+    dcc.Tabs(children=[
+
+        dcc.Tab(
+        label='Information',
+        children=[
+        html.Div(
+            [
+                html.Div([
+                    html.H2("Data source & availability", style={'marginBottom': '20px'}),
+                    html.P([
+                        "The raw data originate from PatStat Online. ",
+                        "They were extracted using a specific SQL query available in a public GitHub repository. ",
+                        ],
+                        style={'fontSize': '20px', 'marginBottom': '30px'}),
+
+                    html.P([
+                        "All transformed data used for generating the visualizations are also available for download at the same location."
+                        ],
+                        style={'fontSize': '20px', 'marginBottom': '30px'})
                 ]),
-                html.H4("C12N Mutation or Genetic Engineering"),
-                html.Ul([
-                    html.Li("C12N 2310/20, C12N9/222, C12N9/224, C12N9/226 — CRISPR patents"),
+                html.Div([
+                    html.H2("Codes IPC / CPC", style={'marginBottom': '10px'}),
+                    html.H4("A01H — New Plants (in agriculture)"),
+                    html.Ul([
+                        html.Li("A01H 1/ — Modifying genotypes"),
+                        html.Li("A01H 3/ — Modifying phenotypes"),
+                        html.Li("A01H 4/ — Reproduction by tissue culture techniques"),
+                        html.Li("A01H 5/ — Angiosperms // plant parts"),
+                        html.Li("A01H 6/ — Angiosperms // botanic taxonomy"),
+                    ], style={'fontSize': '20px','width': '95%', 'margin': '0 auto'}),
+                    html.H4("C12N — Mutation or Genetic Engineering", style={'marginTop': '20px'}),
+                    html.Ul([
+                        html.Li("C12N 2310/20, C12N9/222, C12N9/224, C12N9/226 — CRISPR patents"),
+                    ], style={'fontSize': '20px','width': '95%', 'margin': '0 auto'}),
                 ]),
-                html.H4("Jurisdictions"),
-                html.Ul([
-                    html.Li("EP, US, WO"),
+                html.Div([
+                    html.H2("Jurisdictions", style={'marginTop': '30px'}),
+                    html.H4("From PatStat:"),
+                    html.Ul([
+                        html.Li("716 publications total"),
+                        html.Li("EP: 210 publications, 126 applications, 116 families"),
+                        html.Li("US: 283 publications, 178 applications, 58 families"),
+                        html.Li("WO: 223 publications, 196 applications, 184 families"),
+                        html.Br(),
+                        html.Li("Lens.org > 1000 publications — huge difference for the US jurisdiction...")
+                    ], style={'fontSize': '20px','width': '95%', 'margin': '0 auto'}),
+                ]),
+                html.Div([
+                    html.H2("Applicants", style={'marginTop': '30px'}),
+                    html.Ul([
+                        html.Li("If n applicants: each document is divided by n to avoid double counting."),
+                        html.Li("Non-profit organizations are coded with 'U' (for universities)."),
+                    ], style={'fontSize': '20px','width': '95%', 'margin': '0 auto'})
                 ])
-            ], style={"fontSize": "18px", "padding": "20px"})
-        ]),
+            ],
+            style={"fontSize": "20px", "padding": "30px","width": "80%", "margin": "0 auto"}
+        )
+        ],
+        style={'fontSize': '22px'},
+        selected_style={'fontSize': '22px', 'fontWeight': 'bold'}
+        ),
 
         dcc.Tab(label='Publications per year', children=[
         html.Div([
@@ -89,12 +134,14 @@ app.layout = html.Div([
 
         html.Div([
             dcc.Graph(id='graph-documents'),
-        ], style={
-            'width': '80%',
-            'margin': '0 auto'
-        })
-        ])
-        ]),
+            ], style={
+                'width': '80%',
+                'margin': '0 auto'
+            })
+        ], style={'padding': '20px'})
+        ],
+        style={'fontSize': '22px'},  # Style normal
+        selected_style={'fontSize': '22px', 'fontWeight': 'bold'}),
 
         dcc.Tab(label='Applicants type', children=[
         html.Div([
@@ -130,9 +177,9 @@ app.layout = html.Div([
                     'margin': '0 auto'
                 })
             ], style={'padding': '20px'}),
-        ]),
-
-
+        ],
+        style={'fontSize': '22px'},  # Style normal
+        selected_style={'fontSize': '22px', 'fontWeight': 'bold'}),
 
         dcc.Tab(label='Applicants nationality', children=[
         html.Div([
@@ -168,7 +215,9 @@ app.layout = html.Div([
                     'margin': '0 auto'
                 })
             ], style={'padding': '20px'}),
-        ]),
+        ],
+        style={'fontSize': '22px'},  # Style normal
+        selected_style={'fontSize': '22px', 'fontWeight': 'bold'}),
         
         dcc.Tab(label='Top applicants', children=[
         html.Div([
@@ -224,8 +273,22 @@ app.layout = html.Div([
                     'margin': '0 auto'
                 })
             ], style={'padding': '20px'}), 
-        ]), 
-    ])
+        ],
+        style={'fontSize': '22px'},  # Style normal
+        selected_style={'fontSize': '22px', 'fontWeight': 'bold'}), 
+
+    ],
+    parent_style={
+        'marginBottom': '30px',
+        'border': '1px solid lightgrey',
+        'borderRadius': '5px'
+    },
+    colors={
+        'border': 'lightgrey',
+        'primary': '#2a3f5f',  # Couleur active
+        'background': '#f9f9f9'
+    },
+    )
 ])
 
 register_callbacks(app)
