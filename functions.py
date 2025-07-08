@@ -20,10 +20,6 @@ pub_year = pd.read_csv(os.path.join('data/pub_year.csv'))
 app_year = pd.read_csv(os.path.join('data/app_year.csv'))
 fam_year = pd.read_csv(os.path.join('data/fam_year.csv'))
 
-
-import plotly.graph_objects as go
-import pandas as pd
-
 def plot_documents_interactif(authority='EP'):
     global pub_year, app_year, fam_year
 
@@ -68,23 +64,29 @@ def plot_documents_interactif(authority='EP'):
             'font': dict(size=24, color='#222', family='Arial')
         },
         xaxis=dict(
-            title='Year',
+            title=dict(
+                text="Year",
+                font=dict(size=18),
+                ),
             tickmode='linear',
             ticks='outside',
             showgrid=False,
             linecolor='black',
             mirror=True,
-            title_font=dict(size=18),
+            #title_font=dict(size=18),
             tickfont=dict(size=14)
         ),
         yaxis=dict(
-            title='Documents',
+            title=dict(
+                text="Number of documents",
+                font=dict(size=18),
+                ),
             ticks='outside',
             showgrid=True,
             gridcolor='lightgrey',
             linecolor='black',
             mirror=True,
-            title_font=dict(size=18),
+            #title_font=dict(size=18),
             tickfont=dict(size=14)
         ),
         legend=dict(
@@ -146,23 +148,30 @@ def plot_horizontal_stacked_bar(kind='Publication'):
             'font': dict(size=24, color='#222', family='Arial')
         },
         xaxis=dict(
-            title='Number of documents',
+            title=dict(
+                text="Number of documents",
+                font=dict(size=18),
+                ),
             #tickmode='linear',
             #ticks='outside',
             showgrid=False,
             linecolor='black',
             mirror=True,
-            title_font=dict(size=18),
+            #title_font=dict(size=18),
             tickfont=dict(size=14)
         ),
         yaxis=dict(
-            title='Jurisdiction',
+            #title='Jurisdiction',
+            title=dict(
+                text="Jurisdiction",
+                font=dict(size=18),
+                ),
             ticks='outside',
             showgrid=True,
             gridcolor='lightgrey',
             linecolor='black',
             mirror=True,
-            title_font=dict(size=18),
+            #title_font=dict(size=18),
             tickfont=dict(size=14)
         ),
         legend=dict(
@@ -179,9 +188,9 @@ def plot_horizontal_stacked_bar(kind='Publication'):
 
     return fig
 
-def plot_by_country_with_labels():
+def plot_by_country(kind='Publication'):
     global df_pub_ctry, df_app_ctry, df_Fam_ctry
-    top_n=10
+    top_n = 10
 
     data_dict = {
         'Publication': df_pub_ctry,
@@ -189,87 +198,90 @@ def plot_by_country_with_labels():
         'Family': df_Fam_ctry
     }
 
-    doc_types = ['Publication', 'Application', 'Family']
+    df = data_dict[kind]
     authorities = ['EP', 'US', 'WO']
-    all_traces = []
-    buttons = []
 
-    for i, doc_type in enumerate(doc_types):
-        df = data_dict[doc_type]
+    # Calcule les top pays
+    top_countries = df.groupby('Country')['Count'].sum().nlargest(top_n).index
+    df['Country'] = df['Country'].apply(lambda x: x if x in top_countries else 'Autres')
 
-        # Calcule les top pays
-        top_countries = df.groupby('Country')['Count'].sum().nlargest(top_n).index
-        df['Country'] = df['Country'].apply(lambda x: x if x in top_countries else 'Autres')
+    # Regroupe par autorité et pays
+    grouped = df.groupby(['Auth', 'Country'])['Count'].sum().reset_index()
+    pivot_df = grouped.pivot(index='Auth', columns='Country', values='Count').fillna(0)
+    pivot_df = pivot_df.reindex(authorities)
 
-        # Regroupe par autorité et pays
-        grouped = df.groupby(['Auth', 'Country'])['Count'].sum().reset_index()
-        pivot_df = grouped.pivot(index='Auth', columns='Country', values='Count').fillna(0)
-        pivot_df = pivot_df.reindex(authorities)  # Assure l’ordre EP, US, WO
-
-        # Ajout des traces
-        for j, country in enumerate(pivot_df.columns):
-            trace = go.Bar(
-                name=country,
-                y=pivot_df.index,
-                x=pivot_df[country],
-                orientation='h',
-                visible=(i == 0),
-                text=[country] * len(pivot_df),  # Affiche le code pays
-                textposition='inside',
-                insidetextanchor='start',
-                hovertemplate='%{x} documents – %{text} (%{y})<extra></extra>'
-            )
-            all_traces.append(trace)
-
-        # Gestion de la visibilité
-        n_countries = len(pivot_df.columns)
-        visibility = [False] * (n_countries * len(doc_types))
-        visibility[i * n_countries:(i + 1) * n_countries] = [True] * n_countries
-
-        buttons.append(dict(
-            label=doc_type,
-            method='update',
-            args=[
-                {'visible': visibility},
-                {'title': f'Nombre de {doc_type.lower()}s par pays d’origine et système'}
-            ]
+    # Création des barres
+    traces = []
+    for country in pivot_df.columns:
+        traces.append(go.Bar(
+            name=country,
+            y=pivot_df.index,
+            x=pivot_df[country],
+            orientation='h',
+            text=[country] * len(pivot_df),
+            textposition='inside',
+            insidetextanchor='start',
+            hovertemplate='%{x} documents – %{text} (%{y})<extra></extra>'
         ))
 
     # Création de la figure
-    fig = go.Figure(data=all_traces)
+    fig = go.Figure(data=traces)
+
     fig.update_layout(
         barmode='stack',
         template='plotly_white',
-        xaxis_title='Nombre de documents',
-        yaxis_title='Système de dépôt',
-        title='Nombre de publications par pays d’origine et système',
-        height=600,  # plus lisible
-        updatemenus=[dict(
-            buttons=buttons,
-            direction="right",
-            pad={"r": 10, "t": 10},
-            showactive=True,
-            x=0.5,
-            xanchor="center",
-            y=1.15,
-            yanchor="top"
-        )],
-        legend=dict(
-            title="Pays d’origine",
-            orientation="v",
-            yanchor="top",
-            y=1,
-            xanchor="left",
-            x=1.02
-        )
-    )
 
+        title={
+            'text': f"Applicants nationality by jurisdiction (kind: {kind})",
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': dict(size=24, color='#222', family='Arial')
+        },
+        xaxis=dict(
+            title=dict(
+                text="Number of documents",
+                font=dict(size=18),
+                ),
+            #tickmode='linear',
+            #ticks='outside',
+            showgrid=False,
+            linecolor='black',
+            mirror=True,
+            #title_font=dict(size=18),
+            tickfont=dict(size=14)
+        ),
+        yaxis=dict(
+            #title='Jurisdiction',
+            title=dict(
+                text="Jurisdiction",
+                font=dict(size=18),
+                ),
+            ticks='outside',
+            showgrid=True,
+            gridcolor='lightgrey',
+            linecolor='black',
+            mirror=True,
+            #title_font=dict(size=18),
+            tickfont=dict(size=14)
+        ),
+        legend=dict(
+            title='Applicants nationality',
+            orientation='h',
+            yanchor='bottom',
+            y=1.02,
+            xanchor='center',
+            x=0.5,
+            font=dict(size=14)
+        ),
+        margin=dict(l=60, r=30, t=80, b=60)
+    )
     return fig
 
 
-def plot_top_applicants_colored():
+
+def plot_top_applicants(kind='Publication', auth='EP'):
     global df_pub, df_app, df_Fam
-    top_n=20
+    top_n = 20
 
     data_dict = {
         'Publication': df_pub,
@@ -277,119 +289,88 @@ def plot_top_applicants_colored():
         'Family': df_Fam
     }
 
-    doc_types = ['Publication', 'Application', 'Family']
-    authorities = ['EP', 'US', 'WO']
-    kind_colors = {'F': '#1f77b4', 'U': '#2ca02c', 'I': '#d62728'}  # Firms, Universities, Individuals
+    kind_colors = {'F': "#4d7896", 'U': "#588658", 'I': "#995959"}  # Firms, Universities, Individuals
 
-    all_traces = []
-    trace_labels = []
+    df = data_dict[kind].copy()
+    df_grouped = df.groupby(['Auth', 'Applicant', 'Kind'])['Count'].sum().reset_index()
 
-    for doc_type in doc_types:
-        df = data_dict[doc_type].copy()
-        df_grouped = df.groupby(['Auth', 'Applicant', 'Kind'])['Count'].sum().reset_index()
+    df_auth = df_grouped[df_grouped['Auth'] == auth]
+    total_counts = df_auth.groupby('Applicant')['Count'].sum()
+    top_applicants = total_counts.nlargest(top_n).index
 
-        for authority in authorities:
-            df_auth = df_grouped[df_grouped['Auth'] == authority]
-            total_counts = df_auth.groupby('Applicant')['Count'].sum()
-            top_applicants = total_counts.nlargest(top_n).index
+    df_top = df_auth[df_auth['Applicant'].isin(top_applicants)]
 
-            df_top = df_auth[df_auth['Applicant'].isin(top_applicants)]
+    # Déterminer le Kind dominant par applicant
+    kind_map = (
+        df_top.groupby('Applicant')['Kind']
+        .agg(lambda x: x.mode().iloc[0] if not x.mode().empty else 'F')
+    )
 
-            # Déterminer le Kind dominant par applicant
-            kind_map = (
-                df_top.groupby('Applicant')['Kind']
-                .agg(lambda x: x.mode().iloc[0] if not x.mode().empty else 'F')
-            )
+    # Récupérer les valeurs triées
+    counts = df_top.groupby('Applicant')['Count'].sum().loc[top_applicants]
+    kinds = kind_map.loc[top_applicants]
+    colors = [kind_colors.get(k, 'gray') for k in kinds]
 
-            # Récupérer les valeurs triées
-            counts = df_top.groupby('Applicant')['Count'].sum().loc[top_applicants]
-            kinds = kind_map.loc[top_applicants]
-            colors = [kind_colors.get(k, 'gray') for k in kinds]
+    # Tri décroissant : les plus gros en haut
+    sorted_applicants = counts.sort_values(ascending=False).index
+    sorted_counts = counts.loc[sorted_applicants]
+    sorted_kinds = kinds.loc[sorted_applicants]
+    sorted_colors = [kind_colors.get(k, 'gray') for k in sorted_kinds]
 
-            # Tri décroissant : les plus gros en haut
-            sorted_applicants = counts.sort_values(ascending=False).index
-            sorted_counts = counts.loc[sorted_applicants]
-            sorted_kinds = kinds.loc[sorted_applicants]
-            sorted_colors = [kind_colors.get(k, 'gray') for k in sorted_kinds]
+    trace = go.Bar(
+        x=sorted_counts.values,
+        y=sorted_applicants,
+        name=f"{kind} – {auth}",
+        orientation='h',
+        text=sorted_kinds.values,
+        marker_color=sorted_colors,
+        textposition='auto',
+        hovertemplate='<b>%{y}</b><br>Kind: %{text}<br>Documents: %{x}<extra></extra>'
+    )
 
-            trace = go.Bar(
-                x=sorted_counts.values,
-                y=sorted_applicants,
-                name=f"{doc_type} – {authority}",
-                orientation='h',
-                visible=False,
-                text=sorted_kinds.values,
-                marker_color=sorted_colors,
-                textposition='auto',
-                hovertemplate='<b>%{y}</b><br>Kind: %{text}<br>Documents: %{x}<extra></extra>'
-            )
-
-            all_traces.append(trace)
-            trace_labels.append((doc_type, authority))
-
-    # Rendre la première trace visible
-    all_traces[0].visible = True
-
-    # Boutons pour changer de type de document
-    buttons_doc = []
-    for doc_type in doc_types:
-        visibility = [False] * len(all_traces)
-        for j, (dtype, auth) in enumerate(trace_labels):
-            if dtype == doc_type and auth == 'EP':
-                visibility[j] = True
-        buttons_doc.append(dict(
-            label=doc_type,
-            method='update',
-            args=[
-                {'visible': visibility},
-                {'title': f"Top {top_n} déposants – {doc_type} – EP"}
-            ]
-        ))
-
-    # Boutons pour changer de juridiction
-    buttons_sys = []
-    for authority in authorities:
-        visibility = [False] * len(all_traces)
-        for j, (dtype, auth) in enumerate(trace_labels):
-            if dtype == 'Publication' and auth == authority:
-                visibility[j] = True
-        buttons_sys.append(dict(
-            label=authority,
-            method='update',
-            args=[
-                {'visible': visibility},
-                {'title': f"Top {top_n} déposants – Publication – {authority}"}
-            ]
-        ))
-
-    fig = go.Figure(data=all_traces)
+    fig = go.Figure(data=[trace])
 
     fig.update_layout(
-        updatemenus=[
-            dict(
-                buttons=buttons_doc,
-                direction='right',
-                showactive=True,
-                x=0.3,
-                xanchor='center',
-                y=1.15,
-                yanchor='top'
-            ),
-            dict(
-                buttons=buttons_sys,
-                direction='right',
-                showactive=True,
-                x=0.7,
-                xanchor='center',
-                y=1.15,
-                yanchor='top'
-            )
-        ],
+        #height=600
         template='plotly_white',
-        title=f"Top {top_n} déposants – Publication – EP",
-        xaxis_title='Nombre de documents',
-        yaxis_title='Déposants',
-        height=600  # plus lisible
+
+        title={
+            'text': f"Top {top_n} Applicants (kind: {kind}, jurisdiction: {auth})",
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': dict(size=24, color='#222', family='Arial')
+        },
+        xaxis=dict(
+            title=dict(
+                text="Number of documents",
+                font=dict(size=18),
+                ),
+            #tickmode='linear',
+            #ticks='outside',
+            showgrid=False,
+            linecolor='black',
+            mirror=True,
+            #title_font=dict(size=18),
+            tickfont=dict(size=14)
+        ),
+        yaxis=dict(
+            #title='Jurisdiction',
+            title=dict(
+                text="Applicants",
+                font=dict(size=18),
+                ),
+            ticks='outside',
+            tickmode='array',
+            tickvals=list(sorted_applicants),
+            ticktext=list(sorted_applicants),
+            showgrid=True,
+            gridcolor='lightgrey',
+            linecolor='black',
+            mirror=True,
+            #title_font=dict(size=18),
+            tickfont=dict(size=14)
+        ),
+        margin=dict(l=60, r=30, t=80, b=60)
     )
 
     return fig

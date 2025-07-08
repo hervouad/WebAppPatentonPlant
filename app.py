@@ -27,12 +27,12 @@ app = Dash(__name__)
 app.title = "Crispr patents on agricultural plants"
 
 # Construire les figures avec tes fonctions déjà créées
-from functions import plot_documents_interactif, plot_horizontal_stacked_bar, plot_by_country_with_labels, plot_top_applicants_colored
+from functions import plot_documents_interactif, plot_horizontal_stacked_bar, plot_by_country, plot_top_applicants
 
 fig1 = plot_documents_interactif()   # passe les bons DataFrames
 fig2 = plot_horizontal_stacked_bar()
-fig3 = plot_by_country_with_labels()
-fig4 = plot_top_applicants_colored()
+fig3 = plot_by_country()
+fig4 = plot_top_applicants()
 
 # Définir l'agencement de l'app
 app.layout = html.Div([
@@ -97,8 +97,8 @@ app.layout = html.Div([
         ]),
 
         dcc.Tab(label='Applicants type', children=[
-            html.Div([
-            html.Div([
+        html.Div([
+        html.Div([
                 html.Label("Select document type:", style={
                     'fontSize': '20px',
                     'fontWeight': 'bold',
@@ -131,10 +131,100 @@ app.layout = html.Div([
                 })
             ], style={'padding': '20px'}),
         ]),
-        dcc.Tab(label='Origine des pays', children=[dcc.Graph(figure=fig3)]),
+
+
+
+        dcc.Tab(label='Applicants nationality', children=[
+        html.Div([
+        html.Div([
+                html.Label("Select document type:", style={
+                    'fontSize': '20px',
+                    'fontWeight': 'bold',
+                    'marginBottom': '10px',
+                    'display': 'block',
+                    'textAlign': 'left'
+                    }),
+            dcc.Dropdown(
+                id='kind-dropdown2',
+                options=[
+                    {'label': 'Publication', 'value': 'Publication'},
+                    {'label': 'Application', 'value': 'Application'},
+                    {'label': 'Family', 'value': 'Family'},
+                    ],
+                value='Publication',
+                clearable=False,
+                style={'width': '100%'}
+            ),
+            ], style={
+                'width': '80%',
+                'margin': '0 auto',
+                'paddingBottom': '20px'
+            }),
+
+        html.Div([   
+            dcc.Graph(id='country-fig'),  
+                ], style={
+                    'width': '80%',
+                    'margin': '0 auto'
+                })
+            ], style={'padding': '20px'}),
+        ]),
         
-        dcc.Tab(label='Top applicants', children=[dcc.Graph(figure=fig4)]),
-        
+        dcc.Tab(label='Top applicants', children=[
+        html.Div([
+            html.Div([
+            html.Div([
+                html.Label("Select document type:", style={
+                    'fontSize': '20px',
+                    'fontWeight': 'bold',
+                    'marginBottom': '10px',
+                    'display': 'block',
+                    'textAlign': 'left'
+                    }),
+                dcc.Dropdown(
+                    id='kind-dropdown3',
+                    options=[
+                        {'label': 'Publication', 'value': 'Publication'},
+                        {'label': 'Application', 'value': 'Application'},
+                        {'label': 'Family', 'value': 'Family'}
+                    ],
+                    value='Publication',
+                    clearable=False
+                )
+            ], style={'width': '48%', 'display': 'inline-block'}),
+
+            html.Div([
+                html.Label("Select jurisdiction:", style={
+                    'fontSize': '20px',
+                    'fontWeight': 'bold',
+                    'marginBottom': '10px',
+                    'display': 'block',
+                    'textAlign': 'left'
+                    }),
+                dcc.Dropdown(
+                    id='auth-dropdown',
+                    options=[
+                        {'label': 'EP', 'value': 'EP'},
+                        {'label': 'US', 'value': 'US'},
+                        {'label': 'WO', 'value': 'WO'}
+                    ],
+                    value='EP',
+                    clearable=False
+                )
+            ], style={'width': '48%', 'display': 'inline-block', 'marginLeft': '4%'})
+        ], style={
+                'width': '80%',
+                'margin': '0 auto',
+                'paddingBottom': '20px'}),
+
+        html.Div([   
+            dcc.Graph(id='top-applicants-fig'),  
+                ], style={
+                    'width': '80%',
+                    'margin': '0 auto'
+                })
+            ], style={'padding': '20px'}), 
+        ]), 
     ])
 ])
 
