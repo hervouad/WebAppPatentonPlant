@@ -23,7 +23,6 @@ fam_year = pd.read_csv(os.path.join('data/fam_year.csv'))
 
 def plot_documents_interactif():
     global pub_year, app_year, fam_year
-    print("Dans plot_documents_interactif - pub_year shape:", pub_year.shape)
     # Création d’un dictionnaire pour stocker les traces par autorité
     authorities = ['EP', 'US', 'WO']
     all_traces = []
@@ -87,7 +86,7 @@ def plot_documents_interactif():
         yaxis_title='Nombre de documents',
         title="Nombre de documents par an pour l'autorité : EP"
     )
-    fig.show()
+    return fig
 
 def plot_horizontal_stacked_bar():
     global df_pub_kind, df_app_kind, df_Fam_kind
@@ -178,7 +177,7 @@ def plot_horizontal_stacked_bar():
         legend=dict(title='Type de déposant', orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1)
     )
 
-    fig.show()
+    return fig
 
 def plot_by_country_with_labels():
     global df_pub_ctry, df_app_ctry, df_Fam_ctry
@@ -265,7 +264,7 @@ def plot_by_country_with_labels():
         )
     )
 
-    fig.show()
+    return fig
 
 
 def plot_top_applicants_colored():
@@ -393,4 +392,4 @@ def plot_top_applicants_colored():
         height=600  # plus lisible
     )
 
-    fig.show()
+    return fig
