@@ -1,6 +1,7 @@
 from dash import Dash, dcc, html # type: ignore
 import pandas as pd # type: ignore
 import plotly.graph_objects as go # type: ignore
+from callbacks import register_callbacks # type: ignore
 
 # Charger les données
 pub_year = pd.read_csv('data/pub_year.csv')
@@ -19,10 +20,11 @@ df_pub = pd.read_csv('data/df_pub.csv')
 df_app = pd.read_csv('data/df_app.csv')
 df_Fam = pd.read_csv('data/df_Fam.csv')
 
+authorities=['EP','US','WO']
 
 # Créer l'app Dash
 app = Dash(__name__)
-app.title = "Dashboard Brevets"
+app.title = "Crispr patents on agricultural plants"
 
 # Construire les figures avec tes fonctions déjà créées
 from functions import plot_documents_interactif, plot_horizontal_stacked_bar, plot_by_country_with_labels, plot_top_applicants_colored
@@ -34,8 +36,9 @@ fig4 = plot_top_applicants_colored()
 
 # Définir l'agencement de l'app
 app.layout = html.Div([
-    html.H1("Dashboard des brevets"),
+    html.H1("Cripsr patents on agricultural plants"),
     dcc.Tabs([
+
         dcc.Tab(label='Infos', children=[
             html.Div([
                 html.H2("Codes IPC/CPC"),
@@ -47,9 +50,9 @@ app.layout = html.Div([
                     html.Li("A01H 5/ — Angiosperms // plant parts"),
                     html.Li("A01H 6/ — Angiosperms // botanic taxonomy"),
                 ]),
-                html.H4("C12N ... Mutation or Genetic Engineering"),
+                html.H4("C12N Mutation or Genetic Engineering"),
                 html.Ul([
-                    html.Li("C12N 2310/20, C12N9/222, C12N9/224, C12N9/226 — CRISPR"),
+                    html.Li("C12N 2310/20, C12N9/222, C12N9/224, C12N9/226 — CRISPR patents"),
                 ]),
                 html.H4("Jurisdictions"),
                 html.Ul([
@@ -57,13 +60,85 @@ app.layout = html.Div([
                 ])
             ], style={"fontSize": "18px", "padding": "20px"})
         ]),
-        dcc.Tab(label='Publications par an', children=[dcc.Graph(figure=fig1)]),
-        dcc.Tab(label='Répartition par type', children=[dcc.Graph(figure=fig2)]),
+
+        dcc.Tab(label='Publications per year', children=[
+        html.Div([
+        html.Div([
+            html.Label("Select patent authority:", style={
+                'fontSize': '20px',
+                'fontWeight': 'bold',
+                'marginBottom': '10px',
+                'display': 'block',
+                'textAlign': 'left'}),
+            dcc.Dropdown(
+                id='authority-dropdown',
+                options=[
+                    {'label': 'EP', 'value': 'EP'},
+                    {'label': 'US', 'value': 'US'},
+                    {'label': 'WO', 'value': 'WO'},
+                ],
+                value='EP',
+                clearable=False,
+                style={'width': '100%'}
+            ),
+        ], style={
+            'width': '80%',
+            'margin': '0 auto',
+            'paddingBottom': '20px'
+        }),
+
+        html.Div([
+            dcc.Graph(id='graph-documents'),
+        ], style={
+            'width': '80%',
+            'margin': '0 auto'
+        })
+        ])
+        ]),
+
+        dcc.Tab(label='Applicants type', children=[
+            html.Div([
+            html.Div([
+                html.Label("Select document type:", style={
+                    'fontSize': '20px',
+                    'fontWeight': 'bold',
+                    'marginBottom': '10px',
+                    'display': 'block',
+                    'textAlign': 'left'
+                    }),
+            dcc.Dropdown(
+                id='kind-dropdown',
+                options=[
+                    {'label': 'Publication', 'value': 'Publication'},
+                    {'label': 'Application', 'value': 'Application'},
+                    {'label': 'Family', 'value': 'Family'},
+                    ],
+                value='Publication',
+                clearable=False,
+                style={'width': '100%'}
+            ),
+            ], style={
+                'width': '80%',
+                'margin': '0 auto',
+                'paddingBottom': '20px'
+            }),
+
+            html.Div([
+            dcc.Graph(id='kind-bar-graph'),
+                ], style={
+                    'width': '80%',
+                    'margin': '0 auto'
+                })
+            ], style={'padding': '20px'}),
+        ]),
         dcc.Tab(label='Origine des pays', children=[dcc.Graph(figure=fig3)]),
+        
         dcc.Tab(label='Top applicants', children=[dcc.Graph(figure=fig4)]),
         
     ])
 ])
+
+register_callbacks(app)
 
 if __name__ == '__main__':
     app.run(debug=True, port=8050)

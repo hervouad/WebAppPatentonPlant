@@ -21,74 +21,88 @@ app_year = pd.read_csv(os.path.join('data/app_year.csv'))
 fam_year = pd.read_csv(os.path.join('data/fam_year.csv'))
 
 
-def plot_documents_interactif():
+import plotly.graph_objects as go
+import pandas as pd
+
+def plot_documents_interactif(authority='EP'):
     global pub_year, app_year, fam_year
-    # Création d’un dictionnaire pour stocker les traces par autorité
-    authorities = ['EP', 'US', 'WO']
-    all_traces = []
-    buttons = []
 
-    for i, authority in enumerate(authorities):
-        # Filtrage par autorité
-        pub_filtered = pub_year[pub_year['Auth'] == authority]
-        app_filtered = app_year[app_year['Auth'] == authority]
-        fam_filtered = fam_year[fam_year['Auth'] == authority]
+    # Filtrage par autorité
+    pub_filtered = pub_year[pub_year['Auth'] == authority]
+    app_filtered = app_year[app_year['Auth'] == authority]
+    fam_filtered = fam_year[fam_year['Auth'] == authority]
 
-        # Création des séries
-        pub_counts = pub_filtered.set_index('Year')['Count']
-        app_counts = app_filtered.set_index('Year')['Count']
-        fam_counts = fam_filtered.set_index('Year')['Count']
+    # Création des séries
+    pub_counts = pub_filtered.set_index('Year')['Count']
+    app_counts = app_filtered.set_index('Year')['Count']
+    fam_counts = fam_filtered.set_index('Year')['Count']
 
-        # Fusionner dans un DataFrame unique
-        df_merged = pd.DataFrame({
-            'Publication': pub_counts,
-            'Application': app_counts,
-            'Family': fam_counts
-        }).fillna(0).astype(int).sort_index()
+    # Fusion dans un DataFrame unique
+    df_merged = pd.DataFrame({
+        'Publication': pub_counts,
+        'Application': app_counts,
+        'Family': fam_counts
+    }).fillna(0).astype(int).sort_index()
 
-        # Création des trois barres (Publication, Application, Family)
-        traces = [
-            go.Bar(name='Publication', x=df_merged.index, y=df_merged['Publication'], visible=(i==0)),
-            go.Bar(name='Application', x=df_merged.index, y=df_merged['Application'], visible=(i==0)),
-            go.Bar(name='Family', x=df_merged.index, y=df_merged['Family'], visible=(i==0)),
-        ]
-        all_traces.extend(traces)
+    # Couleurs personnalisées pour les barres
+    colors = ['#636EFA', '#00CC96', '#EF553B']
 
-        # Création d’un bouton pour afficher ces 3 traces uniquement
-        visibility = [False] * (3 * len(authorities))
-        visibility[i*3:(i+1)*3] = [True, True, True]
+    traces = [
+        go.Bar(name='Publication', x=df_merged.index, y=df_merged['Publication'], marker_color=colors[0]),
+        go.Bar(name='Application', x=df_merged.index, y=df_merged['Application'], marker_color=colors[1]),
+        go.Bar(name='Family', x=df_merged.index, y=df_merged['Family'], marker_color=colors[2]),
+    ]
 
-        buttons.append(dict(
-            label=authority,
-            method='update',
-            args=[
-                {'visible': visibility},
-                {'title': f"Nombre de documents par an pour l'autorité : {authority}"}
-            ]
-        ))
+    # Création de la figure
+    fig = go.Figure(data=traces)
 
-    # Construction de la figure
-    fig = go.Figure(data=all_traces)
-
+    # Mise à jour de la mise en page
     fig.update_layout(
-        updatemenus=[dict(
-            active=0,
-            buttons=buttons,
-            x=0.5,
-            xanchor='center',
-            y=1.15,
-            yanchor='top'
-        )],
         barmode='group',
-        height=600,  # plus lisible
+        height=600,
         template='plotly_white',
-        xaxis_title='Année',
-        yaxis_title='Nombre de documents',
-        title="Nombre de documents par an pour l'autorité : EP"
+        title={
+            'text': f"Number of documents per year ({authority})",
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': dict(size=24, color='#222', family='Arial')
+        },
+        xaxis=dict(
+            title='Year',
+            tickmode='linear',
+            ticks='outside',
+            showgrid=False,
+            linecolor='black',
+            mirror=True,
+            titlefont=dict(size=18),
+            tickfont=dict(size=14)
+        ),
+        yaxis=dict(
+            title='Documents',
+            ticks='outside',
+            showgrid=True,
+            gridcolor='lightgrey',
+            linecolor='black',
+            mirror=True,
+            titlefont=dict(size=18),
+            tickfont=dict(size=14)
+        ),
+        legend=dict(
+            title='Document kind',
+            orientation='h',
+            yanchor='bottom',
+            y=1.02,
+            xanchor='center',
+            x=0.5,
+            font=dict(size=14)
+        ),
+        margin=dict(l=60, r=30, t=80, b=60)
     )
+
     return fig
 
-def plot_horizontal_stacked_bar():
+
+def plot_horizontal_stacked_bar(kind='Publication'):
     global df_pub_kind, df_app_kind, df_Fam_kind
 
     # Fonction de préparation des données pour chaque type
@@ -101,80 +115,66 @@ def plot_horizontal_stacked_bar():
         df_pivot = df_pivot[['F', 'U', 'I']].reindex(['EP', 'US', 'WO'])
         return df_pivot
 
-    # Préparation des 3 datasets
-    data_pub = prepare_data(df_pub_kind)
-    data_app = prepare_data(df_app_kind)
-    data_fam = prepare_data(df_Fam_kind)
+    # Sélection des données selon le type
+    if kind == 'Publication':
+        data = prepare_data(df_pub_kind)
+    elif kind == 'Application':
+        data = prepare_data(df_app_kind)
+    elif kind == 'Family':
+        data = prepare_data(df_Fam_kind)
+    else:
+        raise ValueError("Invalid kind")
 
-    # Fonction pour créer les barres pour un dataset donné
-    def make_traces(data, visible=True):
-        return [
-            go.Bar(
-                name='Firms',
-                y=data.index,
-                x=data['F'],
-                orientation='h',
-                marker_color='steelblue',
-                visible=visible
-            ),
-            go.Bar(
-                name='Universities',
-                y=data.index,
-                x=data['U'],
-                orientation='h',
-                marker_color='darkorange',
-                visible=visible
-            ),
-            go.Bar(
-                name='Individuals',
-                y=data.index,
-                x=data['I'],
-                orientation='h',
-                marker_color='seagreen',
-                visible=visible
-            ),
-        ]
+    # Création des traces
+    traces = [
+        go.Bar(name='Firms', y=data.index, x=data['F'], orientation='h', marker_color='steelblue'),
+        go.Bar(name='Universities', y=data.index, x=data['U'], orientation='h', marker_color='darkorange'),
+        go.Bar(name='Individuals', y=data.index, x=data['I'], orientation='h', marker_color='seagreen'),
+    ]
 
-    # Créer les 9 traces (3 pour chaque type)
-    traces = (
-        make_traces(data_pub, visible=True) +
-        make_traces(data_app, visible=False) +
-        make_traces(data_fam, visible=False)
-    )
-
-    # Boutons pour afficher un seul groupe de 3 barres à la fois
-    buttons = []
-    for i, label in enumerate(['Publications', 'Applications', 'Families']):
-        visibility = [False] * 9
-        visibility[i*3:(i+1)*3] = [True, True, True]
-        buttons.append(dict(
-            label=label,
-            method='update',
-            args=[
-                {'visible': visibility},
-                {'title': f"Nombre de documents par système (type : {label})"}
-            ]
-        ))
-
-    # Layout
+    # Création de la figure
     fig = go.Figure(data=traces)
+
     fig.update_layout(
         barmode='stack',
         template='plotly_white',
-        title="Nombre de documents par système (type : Publications)",
-        xaxis_title="Nombre de documents",
-        yaxis_title="Système",
-        height=600,  # plus lisible
-        updatemenus=[dict(
-            buttons=buttons,
-            direction='down',
-            x=0.5,
+
+        title={
+            'text': f"Number of documents by jurisdiction (type: {kind})",
+            'x': 0.5,
+            'xanchor': 'center',
+            'font': dict(size=24, color='#222', family='Arial')
+        },
+        xaxis=dict(
+            title='Number of documents',
+            #tickmode='linear',
+            #ticks='outside',
+            showgrid=False,
+            linecolor='black',
+            mirror=True,
+            titlefont=dict(size=18),
+            tickfont=dict(size=14)
+        ),
+        yaxis=dict(
+            title='Jurisdiction',
+            ticks='outside',
+            showgrid=True,
+            gridcolor='lightgrey',
+            linecolor='black',
+            mirror=True,
+            titlefont=dict(size=18),
+            tickfont=dict(size=14)
+        ),
+        legend=dict(
+            title='Applicant type',
+            orientation='h',
+            yanchor='bottom',
+            y=1.02,
             xanchor='center',
-            y=1.2,
-            yanchor='top',
-            active=0
-        )],
-        legend=dict(title='Type de déposant', orientation='h', yanchor='bottom', y=1.02, xanchor='right', x=1)
+            x=0.5,
+            font=dict(size=14)
+        ),
+        margin=dict(l=60, r=30, t=80, b=60)
     )
 
     return fig
