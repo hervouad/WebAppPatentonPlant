@@ -1,6 +1,6 @@
 # CRISPR Patents on Agricultural Plants
 
-This Dash web application provides interactive visualizations of patent data related to the use of CRISPR technologies in agricultural plants. The aim is to offer insights into publication trends, applicant behaviors, and jurisdictional distributions of CRISPR-related patents in plant biotechnology.
+This Dash web application provides interactive visualizations of patent data related to the use of CRISPR technologies in agricultural plants. The aim is to offer insights into application trends and distributions of CRISPR-related patents in plant biotechnology.
 
 ## 🌱 Data Sources
 
@@ -22,3 +22,8 @@ The app consists of several tabs:
 - functions.py # For generating dynamic graph
 - data/ # Pre-processed data used by the app and the sql script
 - README.md # This file
+
+## Online link to the App
+
+https://patents-on-plant.onrender.com/
+

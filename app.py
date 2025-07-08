@@ -51,8 +51,14 @@ app.layout = html.Div([
         children=[
         html.Div(
             [
+                html.P([
+                        "This Dash web application provides interactive visualizations of patent data related to the use of CRISPR technologies in agricultural plants.",
+                        ],
+                        style={'fontSize': '20px', 'marginBottom': '30px'}),
                 html.Div([
                     html.H2("Data source & availability", style={'marginBottom': '20px'}),
+
+
                     html.P([
                         "The raw data originate from PatStat Online. ",
                         "They were extracted using a specific SQL query available in a public GitHub repository. ",
@@ -68,7 +74,7 @@ app.layout = html.Div([
                     html.A("🔗 View the GitHub repository",
                     href="https://github.com/hervouad/WebAppPatentonPlant",
                     target="_blank",
-                    style={'fontSize': '18px', 'float': 'right', 'margin': '10px 30px'})
+                    style={'fontSize': '20px', 'float': 'right', 'margin': '10px 30px'})
                 ]),
 
                 html.Div([
