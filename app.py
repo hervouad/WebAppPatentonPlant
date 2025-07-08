@@ -117,13 +117,6 @@ app.layout = html.Div([
                         html.Li("WO: 223 publications, 196 applications, 184 families"),
                     ], style={'fontSize': '20px','width': '95%', 'margin': '0 auto'}),
                 ]),
-                html.Div([
-                    html.H2("Applicants", style={'marginTop': '30px'}),
-                    html.Ul([
-                        html.Li("If n applicants: each document is divided by n to avoid double counting."),
-                        html.Li("Non-profit organizations are coded with 'U' (for universities)."),
-                    ], style={'fontSize': '20px','width': '95%', 'margin': '0 auto'})
-                ])
             ],
             style={"fontSize": "20px", "padding": "30px","width": "80%", "margin": "0 auto"}
         )
@@ -163,8 +156,34 @@ app.layout = html.Div([
             ], style={
                 'width': '80%',
                 'margin': '0 auto'
+            }),
+
+        html.Div([
+            html.P([
+                html.Strong("Note: "),
+                html.Br(),
+                "Publications and applications for the US jurisdiction depend heavily on one patent family (from the University of California)."
+                ]),
+            html.P("Dates differ by document type: publication date for publications, application date for applications, and first filing date for families."),
+            html.P("There are fewer applications and families in the most recent years because they are not yet published."),
+            ],
+            style={
+                'border': '2px solid #ccc',
+                'borderRadius': '12px',
+                'backgroundColor': '#f9f9f9',
+                'padding': '20px',
+                'marginBottom': '30px',
+                'marginTop': '20px',
+                'boxShadow': '2px 2px 8px rgba(0, 0, 0, 0.1)',
+                'width': '80%',
+                'marginLeft': 'auto',
+                'marginRight': 'auto',
+                'fontSize': '20px',
+                'lineHeight': '1.6'
             })
+
         ], style={'padding': '20px'})
+
         ],
         style={'fontSize': '22px'},  # Style normal
         selected_style={'fontSize': '22px', 'fontWeight': 'bold'}),
@@ -201,7 +220,33 @@ app.layout = html.Div([
                 ], style={
                     'width': '80%',
                     'margin': '0 auto'
-                })
+                }),
+            
+            html.Div([
+            html.P([
+                html.Strong("Note: "),
+                html.Br(),
+                "Nonprofit org. include universities, governemental agencies, and some private nonprofit research institutions."
+                ]),
+            html.P("If a single patent application lists multiple applicants, the patent count is divided equally among them."),
+            html.P("For example, the University of California shares a patent with Emmanuelle Charpentier. In the U.S., this single patent appears in 143 publications. It is therefore considered that each applicant holds 71.5 patent publications."),
+            ],
+            style={
+                'border': '2px solid #ccc',
+                'borderRadius': '12px',
+                'backgroundColor': '#f9f9f9',
+                'padding': '20px',
+                'marginBottom': '30px',
+                'marginTop': '20px',
+                'boxShadow': '2px 2px 8px rgba(0, 0, 0, 0.1)',
+                'width': '80%',
+                'marginLeft': 'auto',
+                'marginRight': 'auto',
+                'fontSize': '20px',
+                'lineHeight': '1.6'
+            })
+
+
             ], style={'padding': '20px'}),
         ],
         style={'fontSize': '22px'},  # Style normal
@@ -239,13 +284,37 @@ app.layout = html.Div([
                 ], style={
                     'width': '80%',
                     'margin': '0 auto'
-                })
+                }),
+
+        html.Div([
+            html.P([
+                html.Strong("Note: "),
+                html.Br(),
+                "Nationality is indicated only for legal entities; \"I\" stands for individuals."
+                ]),
+            html.P("Nationality reflects the current status, not the status at the time of application."),
+            html.P("For example, Monsanto applications are now considered German, even though they were originally filed under the U.S. company."),
+            ],
+            style={
+                'border': '2px solid #ccc',
+                'borderRadius': '12px',
+                'backgroundColor': '#f9f9f9',
+                'padding': '20px',
+                'marginBottom': '30px',
+                'marginTop': '20px',
+                'boxShadow': '2px 2px 8px rgba(0, 0, 0, 0.1)',
+                'width': '80%',
+                'marginLeft': 'auto',
+                'marginRight': 'auto',
+                'fontSize': '20px',
+                'lineHeight': '1.6'
+            })
             ], style={'padding': '20px'}),
         ],
         style={'fontSize': '22px'},  # Style normal
         selected_style={'fontSize': '22px', 'fontWeight': 'bold'}),
         
-        dcc.Tab(label='Top applicants', children=[
+        dcc.Tab(label='Top 20 applicants', children=[
         html.Div([
             html.Div([
             html.Div([
@@ -297,7 +366,31 @@ app.layout = html.Div([
                 ], style={
                     'width': '80%',
                     'margin': '0 auto'
-                })
+                }),
+
+        html.Div([
+            html.P([
+                html.Strong("Note: "),
+                html.Br(),
+                "Applicant names have been updated to reflect the current situation, similar to how nationalities were handled."
+                ]),
+            html.P("For example, Monsanto applications are now considered Bayer applications."),
+            ],
+            style={
+                'border': '2px solid #ccc',
+                'borderRadius': '12px',
+                'backgroundColor': '#f9f9f9',
+                'padding': '20px',
+                'marginBottom': '30px',
+                'marginTop': '20px',
+                'boxShadow': '2px 2px 8px rgba(0, 0, 0, 0.1)',
+                'width': '80%',
+                'marginLeft': 'auto',
+                'marginRight': 'auto',
+                'fontSize': '20px',
+                'lineHeight': '1.6'
+            })
+
             ], style={'padding': '20px'}), 
         ],
         style={'fontSize': '22px'},  # Style normal

@@ -130,7 +130,7 @@ def plot_horizontal_stacked_bar(kind='Publication'):
     # Création des traces
     traces = [
         go.Bar(name='Firms', y=data.index, x=data['F'], orientation='h', marker_color='steelblue'),
-        go.Bar(name='Universities', y=data.index, x=data['U'], orientation='h', marker_color='darkorange'),
+        go.Bar(name='Nonprofit org.', y=data.index, x=data['U'], orientation='h', marker_color='darkorange'),
         go.Bar(name='Individuals', y=data.index, x=data['I'], orientation='h', marker_color='seagreen'),
     ]
 
