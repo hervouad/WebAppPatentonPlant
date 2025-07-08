@@ -69,7 +69,7 @@ app.layout = html.Div([
                         'marginLeft': 'auto',
                         'marginRight': 'auto'
                     }),
-                    
+
                 html.Div([
                     html.H2("Data source & availability", style={'marginBottom': '20px'}),
 
@@ -115,8 +115,6 @@ app.layout = html.Div([
                         html.Li("EP: 210 publications, 126 applications, 116 families"),
                         html.Li("US: 283 publications, 178 applications, 58 families"),
                         html.Li("WO: 223 publications, 196 applications, 184 families"),
-                        html.Br(),
-                        html.Li("Lens.org > 1000 publications — huge difference for the US jurisdiction...")
                     ], style={'fontSize': '20px','width': '95%', 'margin': '0 auto'}),
                 ]),
                 html.Div([
