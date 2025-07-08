@@ -74,7 +74,7 @@ def plot_documents_interactif(authority='EP'):
             showgrid=False,
             linecolor='black',
             mirror=True,
-            titlefont=dict(size=18),
+            font=dict(size=18),
             tickfont=dict(size=14)
         ),
         yaxis=dict(
@@ -84,7 +84,7 @@ def plot_documents_interactif(authority='EP'):
             gridcolor='lightgrey',
             linecolor='black',
             mirror=True,
-            titlefont=dict(size=18),
+            font=dict(size=18),
             tickfont=dict(size=14)
         ),
         legend=dict(
@@ -140,7 +140,7 @@ def plot_horizontal_stacked_bar(kind='Publication'):
         template='plotly_white',
 
         title={
-            'text': f"Number of documents by jurisdiction (type: {kind})",
+            'text': f"Number of documents by jurisdiction (kind: {kind})",
             'x': 0.5,
             'xanchor': 'center',
             'font': dict(size=24, color='#222', family='Arial')
@@ -152,7 +152,7 @@ def plot_horizontal_stacked_bar(kind='Publication'):
             showgrid=False,
             linecolor='black',
             mirror=True,
-            titlefont=dict(size=18),
+            font=dict(size=18),
             tickfont=dict(size=14)
         ),
         yaxis=dict(
@@ -162,7 +162,7 @@ def plot_horizontal_stacked_bar(kind='Publication'):
             gridcolor='lightgrey',
             linecolor='black',
             mirror=True,
-            titlefont=dict(size=18),
+            font=dict(size=18),
             tickfont=dict(size=14)
         ),
         legend=dict(
