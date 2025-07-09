@@ -23,7 +23,9 @@ df_Fam = pd.read_csv('data/df_Fam.csv')
 authorities=['EP','US','WO']
 
 # Créer l'app Dash
-app = Dash(__name__)
+app = Dash(__name__,
+           meta_tags=[{'name':'viewport',
+                       'content': 'with=device-width, initial-scale=1.0, maximum-scale=1.2, minimum-scale=0.5'}])
 app.title = "Crispr patents on agricultural plants"
 
 # Construire les figures avec tes fonctions déjà créées
