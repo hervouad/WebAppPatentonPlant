@@ -97,6 +97,10 @@ app.layout = html.Div([
                 html.Div([
                     html.H2("Codes IPC / CPC", style={'marginBottom': '10px'}),
                     html.H4("A01H — New Plants (in agriculture)"),
+                    html.P([
+                        "At least one of the following codes must be present in the patent application: ",
+                        ],
+                        style={'fontSize': '20px', 'marginBottom': '30px'}),
                     html.Ul([
                         html.Li("A01H 1/ — Modifying genotypes"),
                         html.Li("A01H 3/ — Modifying phenotypes"),
@@ -105,6 +109,10 @@ app.layout = html.Div([
                         html.Li("A01H 6/ — Angiosperms // botanic taxonomy"),
                     ], style={'fontSize': '20px','width': '95%', 'margin': '0 auto'}),
                     html.H4("C12N — Mutation or Genetic Engineering", style={'marginTop': '20px'}),
+                    html.P([
+                        "And at least one of the following codes must be present in the patent application: ",
+                        ],
+                        style={'fontSize': '20px', 'marginBottom': '30px'}),
                     html.Ul([
                         html.Li("C12N 2310/20, C12N9/222, C12N9/224, C12N9/226 — CRISPR patents"),
                     ], style={'fontSize': '20px','width': '95%', 'margin': '0 auto'}),
@@ -113,10 +121,10 @@ app.layout = html.Div([
                     html.H2("Jurisdictions", style={'marginTop': '30px'}),
                     html.H4("From PatStat:"),
                     html.Ul([
-                        html.Li("716 publications total"),
                         html.Li("EP: 210 publications, 126 applications, 116 families"),
                         html.Li("US: 283 publications, 178 applications, 58 families"),
                         html.Li("WO: 223 publications, 196 applications, 184 families"),
+                        html.Li("716 publications total"),
                     ], style={'fontSize': '20px','width': '95%', 'margin': '0 auto'}),
                 ]),
             ],
