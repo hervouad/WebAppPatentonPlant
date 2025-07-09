@@ -170,7 +170,7 @@ app.layout = html.Div([
 
         html.Div([
             html.P([
-                html.Strong("Note: "),
+                html.Strong("Comments: "),
                 html.Br(),
                 "Publications and applications for the US jurisdiction depend heavily on one patent family (from the University of California)."
                 ]),
@@ -234,7 +234,7 @@ app.layout = html.Div([
             
             html.Div([
             html.P([
-                html.Strong("Note: "),
+                html.Strong("Comments: "),
                 html.Br(),
                 "Nonprofit org. include universities, governemental agencies, and some private nonprofit research institutions."
                 ]),
@@ -298,7 +298,7 @@ app.layout = html.Div([
 
         html.Div([
             html.P([
-                html.Strong("Note: "),
+                html.Strong("Comments: "),
                 html.Br(),
                 "Nationality is indicated only for legal entities; \"I\" stands for individuals."
                 ]),
@@ -380,7 +380,7 @@ app.layout = html.Div([
 
         html.Div([
             html.P([
-                html.Strong("Note: "),
+                html.Strong("Comments: "),
                 html.Br(),
                 "Applicant names have been updated to reflect the current situation, similar to how nationalities were handled."
                 ]),
