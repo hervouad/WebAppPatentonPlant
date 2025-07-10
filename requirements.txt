@@ -4,3 +4,4 @@ pandas
 plotly
 numpy
 datetime
+dash_daq==0.5.0

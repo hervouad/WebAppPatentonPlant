@@ -104,8 +104,13 @@ def plot_documents_interactif(authority='EP'):
     return fig
 
 
-def plot_horizontal_stacked_bar(kind='Publication'):
+def plot_horizontal_stacked_bar(kind='Publication', chi=1):
     global df_pub_kind, df_app_kind, df_Fam_kind
+
+    if chi==1:
+        ind=['EP', 'US', 'AU','WO','JP','KR','CN']
+    else:
+        ind=['EP', 'US', 'AU','WO','JP','KR']
 
     # Fonction de préparation des données pour chaque type
     def prepare_data(df, kind_col='Kind'):
@@ -114,7 +119,7 @@ def plot_horizontal_stacked_bar(kind='Publication'):
         for col in ['F', 'U', 'I']:
             if col not in df_pivot.columns:
                 df_pivot[col] = 0
-        df_pivot = df_pivot[['F', 'U', 'I']].reindex(['EP', 'US', 'WO'])
+        df_pivot = df_pivot[['F', 'U', 'I']].reindex(ind)
         return df_pivot
 
     # Sélection des données selon le type
@@ -188,9 +193,14 @@ def plot_horizontal_stacked_bar(kind='Publication'):
 
     return fig
 
-def plot_by_country(kind='Publication'):
+def plot_by_country(kind='Publication', chi=1):
     global df_pub_ctry, df_app_ctry, df_Fam_ctry
-    top_n = 10
+    top_n=10
+
+    if chi==1:
+        authorities = ['EP', 'US','AU','WO','JP','KR','CN']
+    else:
+        authorities = ['EP', 'US','AU','WO','JP','KR']
 
     data_dict = {
         'Publication': df_pub_ctry,
@@ -199,7 +209,7 @@ def plot_by_country(kind='Publication'):
     }
 
     df = data_dict[kind]
-    authorities = ['EP', 'US', 'WO']
+    
 
     # Calcule les top pays
     top_countries = df.groupby('Country')['Count'].sum().nlargest(top_n).index
@@ -278,10 +288,20 @@ def plot_by_country(kind='Publication'):
     return fig
 
 
-
-def plot_top_applicants(kind='Publication', auth='EP'):
+def plot_top_applicants(kind='Publication', auth='EP', top=20):
     global df_pub, df_app, df_Fam
-    top_n = 20
+    top_n = top
+
+    if top== 10:
+        He=400
+    elif top== 20:
+        He=500
+    elif top== 30:
+        He=600
+    elif top==40:
+        He=800
+    else:
+        He=1000
 
     data_dict = {
         'Publication': df_pub,
@@ -331,7 +351,7 @@ def plot_top_applicants(kind='Publication', auth='EP'):
     fig = go.Figure(data=[trace])
 
     fig.update_layout(
-        #height=600
+        height=He,
         template='plotly_white',
 
         title={

@@ -1,4 +1,5 @@
 from dash import Dash, dcc, html # type: ignore
+import dash_daq as daq # type: ignore
 import pandas as pd # type: ignore
 import plotly.graph_objects as go # type: ignore
 from callbacks import register_callbacks # type: ignore
@@ -150,6 +151,10 @@ app.layout = html.Div([
                     {'label': 'EP', 'value': 'EP'},
                     {'label': 'US', 'value': 'US'},
                     {'label': 'WO', 'value': 'WO'},
+                    {'label': 'CN', 'value': 'CN'},
+                    {'label': 'KR', 'value': 'KR'},
+                    {'label': 'JP', 'value': 'JP'},
+                    {'label': 'AU', 'value': 'AU'},
                 ],
                 value='EP',
                 clearable=False,
@@ -239,7 +244,7 @@ app.layout = html.Div([
                 "Nonprofit org. include universities, governemental agencies, and some private nonprofit research institutions."
                 ]),
             html.P("If a single patent application lists multiple applicants, the patent count is divided equally among them."),
-            html.P("For example, the University of California shares a patent with Emmanuelle Charpentier. In the U.S., this single patent appears in 143 publications. It is therefore considered that each applicant holds 71.5 patent publications."),
+            html.P("For example, the University of California shares a patent with Emmanuelle Charpentier. In the U.S., this single family appears in 143 publications. It is therefore considered that each applicant holds 71.5 patent publications."),
             ],
             style={
                 'border': '2px solid #ccc',
@@ -265,29 +270,46 @@ app.layout = html.Div([
         dcc.Tab(label='Applicants nationality', children=[
         html.Div([
         html.Div([
+            html.Div([
                 html.Label("Select document type:", style={
                     'fontSize': '20px',
                     'fontWeight': 'bold',
-                    'marginBottom': '10px',
+                    'marginBottom': '5px',
                     'display': 'block',
                     'textAlign': 'left'
-                    }),
-            dcc.Dropdown(
-                id='kind-dropdown2',
-                options=[
-                    {'label': 'Publication', 'value': 'Publication'},
-                    {'label': 'Application', 'value': 'Application'},
-                    {'label': 'Family', 'value': 'Family'},
+                }),
+                dcc.Dropdown(
+                    id='kind-dropdown2',
+                    options=[
+                        {'label': 'Publication', 'value': 'Publication'},
+                        {'label': 'Application', 'value': 'Application'},
+                        {'label': 'Family', 'value': 'Family'},
                     ],
-                value='Publication',
-                clearable=False,
-                style={'width': '100%'}
-            ),
-            ], style={
-                'width': '80%',
-                'margin': '0 auto',
-                'paddingBottom': '20px'
-            }),
+                    value='Publication',
+                    clearable=False,
+                    style={'width': '100%'}
+                ),
+            ], style={'width': '48%', 'display': 'inline-block', 'verticalAlign': 'top', 'marginRight': '4%'}),
+
+            html.Div([
+                html.Label("Include China:", style={
+                    'fontSize': '20px',
+                    'fontWeight': 'bold',
+                    'marginBottom': '5px',
+                    'display': 'block',
+                    'textAlign': 'left'
+                }),
+                daq.ToggleSwitch(
+                    id='china-toggle',
+                    value=True,
+                    style={'width': '100%'}
+                )
+            ], style={'width': '48%', 'display': 'inline-block', 'verticalAlign': 'top'}),
+        ], style={
+            'width': '80%',
+            'margin': '0 auto',
+            'paddingBottom': '20px'
+        }),
 
         html.Div([   
             dcc.Graph(id='country-fig'),  
@@ -324,7 +346,7 @@ app.layout = html.Div([
         style={'fontSize': '22px'},  # Style normal
         selected_style={'fontSize': '22px', 'fontWeight': 'bold'}),
         
-        dcc.Tab(label='Top 20 applicants', children=[
+        dcc.Tab(label='Top applicants', children=[
         html.Div([
             html.Div([
             html.Div([
@@ -345,7 +367,7 @@ app.layout = html.Div([
                     value='Publication',
                     clearable=False
                 )
-            ], style={'width': '48%', 'display': 'inline-block'}),
+            ], style={'width': '30%', 'display': 'inline-block'}),
 
             html.Div([
                 html.Label("Select jurisdiction:", style={
@@ -360,12 +382,38 @@ app.layout = html.Div([
                     options=[
                         {'label': 'EP', 'value': 'EP'},
                         {'label': 'US', 'value': 'US'},
-                        {'label': 'WO', 'value': 'WO'}
+                        {'label': 'WO', 'value': 'WO'},
+                        {'label': 'CN', 'value': 'CN'},
+                        {'label': 'KR', 'value': 'KR'},
+                        {'label': 'JP', 'value': 'JP'},
+                        {'label': 'AU', 'value': 'AU'},
                     ],
                     value='EP',
                     clearable=False
                 )
-            ], style={'width': '48%', 'display': 'inline-block', 'marginLeft': '4%'})
+            ], style={'width': '30%', 'display': 'inline-block', 'marginLeft': '4%'}),
+
+            html.Div([
+                html.Label("Select the top number:", style={
+                    'fontSize': '20px',
+                    'fontWeight': 'bold',
+                    'marginBottom': '10px',
+                    'display': 'block',
+                    'textAlign': 'left'
+                    }),
+                dcc.Dropdown(
+                    id='top-dropdown',
+                    options=[
+                        {'label': '10', 'value': 10},
+                        {'label': '20', 'value': 20},
+                        {'label': '30', 'value': 30},
+                        {'label': '40', 'value': 40},
+                        {'label': '50', 'value': 50}
+                    ],
+                    value=20,
+                    clearable=False
+                )
+            ], style={'width': '30%', 'display': 'inline-block', 'marginLeft': '4%'})
         ], style={
                 'width': '80%',
                 'margin': '0 auto',
@@ -385,6 +433,7 @@ app.layout = html.Div([
                 "Applicant names have been updated to reflect the current situation, similar to how nationalities were handled."
                 ]),
             html.P("For example, Monsanto applications are now considered Bayer applications."),
+            html.P('All research organizations and universities from China have been grouped under "Chinese Academies & Universities".'),
             ],
             style={
                 'border': '2px solid #ccc',
