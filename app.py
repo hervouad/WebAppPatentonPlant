@@ -157,6 +157,7 @@ app.layout = html.Div([
                     {'label': 'AU', 'value': 'AU'},
                 ],
                 value='EP',
+                searchable=False,
                 clearable=False,
                 style={'width': '100%'}
             ),
@@ -221,6 +222,7 @@ app.layout = html.Div([
                     {'label': 'Family', 'value': 'Family'},
                     ],
                 value='Publication',
+                searchable=False,
                 clearable=False,
                 style={'width': '100%'}
             ),
@@ -286,6 +288,7 @@ app.layout = html.Div([
                         {'label': 'Family', 'value': 'Family'},
                     ],
                     value='Publication',
+                    searchable=False,
                     clearable=False,
                     style={'width': '100%'}
                 ),
@@ -365,6 +368,7 @@ app.layout = html.Div([
                         {'label': 'Family', 'value': 'Family'}
                     ],
                     value='Publication',
+                    searchable=False,
                     clearable=False
                 )
             ], style={'width': '30%', 'display': 'inline-block'}),
@@ -389,6 +393,7 @@ app.layout = html.Div([
                         {'label': 'AU', 'value': 'AU'},
                     ],
                     value='EP',
+                    searchable=False,
                     clearable=False
                 )
             ], style={'width': '30%', 'display': 'inline-block', 'marginLeft': '4%'}),
@@ -411,6 +416,7 @@ app.layout = html.Div([
                         {'label': '50', 'value': 50}
                     ],
                     value=20,
+                    searchable=False,
                     clearable=False
                 )
             ], style={'width': '30%', 'display': 'inline-block', 'marginLeft': '4%'})
